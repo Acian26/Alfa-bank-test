@@ -126,14 +126,14 @@ print('Рассчитаная сумма ежемесячного платежа
 puts('')
 
 #Нажатие на кнопку "Рассчитать"
-$driver.find_element(:xpath, "/html/body/div/div[2]/div[1]/form/div[10]/div/input").click
+$driver.find_element(:xpath, "/html/body/div/div[2]/div[1]/form/div[11]/div/input").click
 
 wait = Selenium::WebDriver::Wait.new(timeout: 10) #задержка на странице, чтобы прогрузились данные "ежемесячный платёж"
 #Ожидание пока число Ежемесячного платежа не появится на странице
-wait.until { $driver.find_element(:xpath, '/html/body/div/div[2]/div[1]/form/div[14]/div[1]/div[1]/div[2]/div').displayed?}
+wait.until { $driver.find_element(css: 'body > div > div.columns-container > div.content-column > form > div.row.no-gutters.split > div:nth-child(1) > div:nth-child(1) > div.calc-fright > div').displayed?}
 
 #Получение числа из Ежемесячного платежа
-price1 = $driver.find_element(:xpath, '/html/body/div/div[2]/div[1]/form/div[14]/div[1]/div[1]/div[2]/div').attribute("innerHTML")
+price1 = $driver.find_element(css: 'body > div > div.columns-container > div.content-column > form > div.row.no-gutters.split > div:nth-child(1) > div:nth-child(1) > div.calc-fright > div').attribute("innerHTML")
 price2 = price1.gsub(/\s+/, "").gsub(/\,+/, ".")
 print('Сумма платежа с сайта: ', price2, ' руб.')
 puts('')
