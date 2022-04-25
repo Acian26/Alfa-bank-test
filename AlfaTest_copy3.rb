@@ -3,7 +3,37 @@ options = Selenium::WebDriver::Chrome::Options.new(args: ['log-level=3'])#log-le
 #Объявляем driver глобальной переменной, чтобы её было видно в методе
 $driver = Selenium::WebDriver.for(:chrome, capabilities: options) #Открываем браузер хром
 $driver.navigate.to 'https://calcus.ru/kalkulyator-ipoteki' #задаём ссылку на страницу, которая должна открываться
-$driver.manage.window.maximize #открыть страницу на полный экран
+#$driver.manage.window.maximize #открыть страницу на полный экран
+
+#Добавим возможность вводить различные значения с клавиатуры
+
+puts('Введите значение Стоимости недвижимости:')
+stoimost = gets.chomp
+#Проверка чтобы не было пустых значений
+while stoimost.empty? do
+  puts "Вы ничего не ввели!!!"
+  puts('Введите значение Стоимости недвижимости:')
+  stoimost = gets.chomp
+end
+
+puts('Введите значение Первоначального взноса в %:')
+vznos = gets.chomp
+#Проверка чтобы не было пустых значений
+while vznos.empty? do
+  puts "Вы ничего не ввели!!!"
+  puts('Введите значение Первоначального взноса в %:')
+  vznos = gets.chomp
+end
+
+puts('Введите значение Срока кредита (лет):')
+srok = gets.chomp
+#Проверка чтобы не было пустых значений
+while srok.empty? do
+  puts "Вы ничего не ввели!!!"
+  puts('Введите значение Срока кредита (лет):')
+  srok = gets.chomp
+end
+puts('------------------------')
 
 #Метод проверки наличия элементов
 def proverit_element_na_str(a1, a2, txt)
@@ -27,7 +57,7 @@ proverit_element_na_str(:xpath, "/html/body/div/div[2]/div[1]/form/div[9]/div[1]
 puts('------------------------')
 
 #Заполнение поля "Стоимость недвижимости" = 12.000.000
-$driver.find_element(:name, "cost").send_keys(12000000)
+$driver.find_element(:name, "cost").send_keys(stoimost)
 
 #Выбор Первоначального взноса (выпадающий список) в %
 dropdown = $driver.find_element(:name, 'start_sum_type') #путь к выпадающему списку
@@ -35,14 +65,15 @@ option = Selenium::WebDriver::Support::Select.new(dropdown) #создание о
 option.select_by(:value,'2') #задание варианта выбора по параметру value
 
 #Заполнение поля "Первоначальный взнос"
-$driver.find_element(:name, "start_sum").send_keys(20)
+$driver.find_element(:name, "start_sum").send_keys(vznos)
 
 #Проверка правильно рассчитанного первоначального взноса и отображения его на экране
 vznos_so_stranichy = $driver.find_element(:xpath, "/html/body/div/div[2]/div[1]/form/div[3]/div[2]/div[3]").text().gsub(/\s+/, "").gsub(/\руб.+/, "").gsub(/\(+/, "").gsub(/\)+/, "").to_i
+
 vznos = $driver.find_element(:name, "start_sum").attribute('value').to_f
 stoimost = $driver.find_element(:name, "cost").attribute('value').gsub(/\s+/, "").to_f
 resultat_vznosa = (vznos * stoimost)/100
-resultat_vznosa = resultat_vznosa.round #округление до целых по правилам математики
+resultat_vznosa = resultat_vznosa.round
 if vznos_so_stranichy == resultat_vznosa and $driver.find_element(:xpath, "/html/body/div/div[2]/div[1]/form/div[3]/div[2]/div[3]").displayed? == true
   print('Первоначальный взнос рассчитан и отображен верно = ', resultat_vznosa, ' руб.')
   puts('')
@@ -64,7 +95,7 @@ end
 puts('------------------------')
 
 #Заполнение поля "Срок кредита"
-$driver.find_element(:xpath, "/html/body/div/div[2]/div[1]/form/div[6]/div[2]/div[1]/input").send_keys(20)
+$driver.find_element(:xpath, "/html/body/div/div[2]/div[1]/form/div[6]/div[2]/div[1]/input").send_keys(srok)
 
 #Генерация рандомного числа от 5 до 12
 rnd = rand(5..12)
@@ -115,4 +146,4 @@ else
   print(' Нет')
 end
 
-sleep(3) #Задержка положения на экране на 3 сек.
+sleep(5) #Задержка положения на экране на 10 сек.
