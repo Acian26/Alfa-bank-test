@@ -1,4 +1,4 @@
-# Комментарии к файлам AlfaTest.rb, AlfaTest_copy2.rb и AlfaTest_copy3.rb
+# Комментарии к файлам AlfaTest.rb, AlfaTest_copy2.rb и AlfaTest_copy3.rb (РЕККОМЕНДУЕТСЯ СМОТРЕТЬ ФАЙЛ AlfaTest_copy2.rb)
 Первова Анна. Тестовое задание в Альфа банк Тестирование.
 
 В файле AlfaTest.rb описано:
