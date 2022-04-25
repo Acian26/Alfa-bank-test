@@ -56,7 +56,7 @@ proverit_element_na_str(:xpath, "/html/body/div/div[2]/div[1]/form/div[8]/div[1]
 proverit_element_na_str(:xpath, "/html/body/div/div[2]/div[1]/form/div[9]/div[1]", "Текст 'Тип ежемесячных платежей'")
 puts('------------------------')
 
-#Заполнение поля "Стоимость недвижимости" = 12.000.000
+#Заполнение поля "Стоимость недвижимости"
 $driver.find_element(:name, "cost").send_keys(stoimost)
 
 #Выбор Первоначального взноса (выпадающий список) в %
