@@ -45,6 +45,7 @@ else
 end
 
 #Проверка правильности рассчитанной суммы кредита и его отображения на экране
+
 if $driver.find_element(:xpath, "/html/body/div/div[2]/div[1]/form/div[4]/div[2]/span[1]").text() == '9 600 000' and $driver.find_element(:xpath, "/html/body/div/div[2]/div[1]/form/div[4]/div[2]/span[1]").displayed? == true
   puts('Сумма кредита рассчитана и отображена верно')
 else
@@ -87,6 +88,12 @@ price1 = $driver.find_element(css: 'body > div > div.columns-container > div.con
 price2 = price1.gsub(/\s+/, "").gsub(/\,+/, ".")
 puts('Сумма платежа с сайта: ', price2)
 puts('------------------------')
-puts('Соответствует ли значение с сайта значению, рассчитанному по формуле? ', price2.to_f.round(2)==result)
+
+puts('Соответствует ли значение с сайта значению, рассчитанному по формуле?')
+if price2.to_f.round(2)==result
+  puts('Да')
+else
+  puts('Нет')
+end
 
 sleep(10) #Задержка положения на экране на 10 сек.
