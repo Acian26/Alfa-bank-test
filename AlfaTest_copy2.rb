@@ -38,23 +38,27 @@ option.select_by(:value,'2') #задание варианта выбора по 
 $driver.find_element(:name, "start_sum").send_keys(20)
 
 #Проверка правильно рассчитанного первоначального взноса и отображения его на экране
-so_stranichy = $driver.find_element(:xpath, "/html/body/div/div[2]/div[1]/form/div[3]/div[2]/div[3]").text()
-so_stranichy1 = so_stranichy.gsub(/\s+/, "").gsub(/\руб.+/, "").gsub(/\(+/, "").gsub(/\)+/, "").to_i
+vznos_so_stranichy = $driver.find_element(:xpath, "/html/body/div/div[2]/div[1]/form/div[3]/div[2]/div[3]").text().gsub(/\s+/, "").gsub(/\руб.+/, "").gsub(/\(+/, "").gsub(/\)+/, "").to_i
 vznos = $driver.find_element(:name, "start_sum").attribute('value').to_i
 stoimost = $driver.find_element(:name, "cost").attribute('value').gsub(/\s+/, "").to_i
-resutat = (vznos * stoimost)/100
-if so_stranichy1 == resutat and $driver.find_element(:xpath, "/html/body/div/div[2]/div[1]/form/div[3]/div[2]/div[3]").displayed? == true
-  puts('Первоначальный взнос рассчитан и отображен верно')
+resutat_vznosa = (vznos * stoimost)/100
+if vznos_so_stranichy == resutat_vznosa and $driver.find_element(:xpath, "/html/body/div/div[2]/div[1]/form/div[3]/div[2]/div[3]").displayed? == true
+  print('Первоначальный взнос рассчитан и отображен верно = ', resutat_vznosa, ' руб.')
+  puts('')
 else
-  puts('Первоначальный взнос рассчитан или отображен с ошибкой')
+  print('Первоначальный взнос рассчитан или отображен с ошибкой')
+  puts('')
 end
 
 #Проверка правильности рассчитанной суммы кредита и его отображения на экране
-
-if $driver.find_element(:xpath, "/html/body/div/div[2]/div[1]/form/div[4]/div[2]/span[1]").text() == '9 600 000' and $driver.find_element(:xpath, "/html/body/div/div[2]/div[1]/form/div[4]/div[2]/span[1]").displayed? == true
-  puts('Сумма кредита рассчитана и отображена верно')
+summa_so_stranichy = $driver.find_element(:xpath, "/html/body/div/div[2]/div[1]/form/div[4]/div[2]/span[1]").text().gsub(/\s+/, "").to_i
+resultat_summa = $driver.find_element(:name, "cost").attribute('value').gsub(/\s+/, "").to_i - resutat_vznosa
+if summa_so_stranichy == resultat_summa and $driver.find_element(:xpath, "/html/body/div/div[2]/div[1]/form/div[4]/div[2]/span[1]").displayed? == true
+  print('Сумма кредита рассчитана и отображена верно = ', resultat_summa, ' руб.')
+  puts('')
 else
-  puts('Сумма кредита рассчитана или отображена с ошибкой')
+  print('Сумма кредита рассчитана или отображена с ошибкой')
+  puts('')
 end
 puts('------------------------')
 
@@ -63,27 +67,32 @@ $driver.find_element(:xpath, "/html/body/div/div[2]/div[1]/form/div[6]/div[2]/di
 
 #Генерация рандомного числа от 5 до 12
 rnd = rand(5..12)
-puts('Сгенерированное число для процентной ставки: ', rnd)
+print('Сгенерированное число для процентной ставки: ', rnd)
+puts('')
 puts('------------------------')
 #Добавление сгенерированного числа в поле "Процентная ставка"
 $driver.find_element(:xpath, "/html/body/div/div[2]/div[1]/form/div[8]/div[2]/div[1]/input").send_keys(rnd)
 
 aut = $driver.find_element(:xpath, "//*[@id='payment-type-1']").selected? #проверка нажатия радиобаттон 1
 deff = $driver.find_element(:xpath, "//*[@id='payment-type-2']").selected? #проверка, что радиобаттон 2 не нажата
-puts('Состояние радиобаттон "Аннуитетные": ', aut)
-puts('Состояние радиобаттон "Дифференцированные": ', deff)
+print('Состояние радиобаттон "Аннуитетные": ', aut)
+puts('')
+print('Состояние радиобаттон "Дифференцированные": ', deff)
+puts('')
 puts('------------------------')
 
 #Проверка ежемесячного платежа по формуле
 
 i = (rnd/100.0)/12.0 #рассчёт процентной ставки в месяц
 #Получить значение из поля "срок кредита" и перевод из str в int
-n = $driver.find_element(:name, 'start_sum').attribute('value').to_i
+n = $driver.find_element(:name, 'period').attribute('value').to_i
+puts('JDFGRJNFJNLRJK ', n)
 numerator = (i*(1+i)**(n*12)) #числитель формулы
 denominater = (1+i)**(n*12) -1 #знаменатель формулы
-platezh = 9600000*(numerator/denominater) #формула
+platezh = resultat_summa*(numerator/denominater) #формула
 result = platezh.round(2) #округление до 2-х знаков
-puts('Рассчитаная сумма ежемесячного платежа: ', result)
+print('Рассчитаная сумма ежемесячного платежа: ', result, ' руб.')
+puts('')
 
 #Нажатие на кнопку "Рассчитать"
 $driver.find_element(:xpath, "/html/body/div/div[2]/div[1]/form/div[10]/div/input").click
@@ -95,14 +104,15 @@ wait.until { $driver.find_element(:xpath, '/html/body/div/div[2]/div[1]/form/div
 #Получение числа из Ежемесячного платежа
 price1 = $driver.find_element(:xpath, '/html/body/div/div[2]/div[1]/form/div[14]/div[1]/div[1]/div[2]/div').attribute("innerHTML")
 price2 = price1.gsub(/\s+/, "").gsub(/\,+/, ".")
-puts('Сумма платежа с сайта: ', price2)
+print('Сумма платежа с сайта: ', price2, ' руб.')
+puts('')
 puts('------------------------')
 
-puts('Соответствует ли значение с сайта значению, рассчитанному по формуле?')
+print('Соответствует ли значение с сайта значению, рассчитанному по формуле?')
 if price2.to_f.round(2)==result
-  puts('Да')
+  puts(' Да')
 else
-  puts('Нет')
+  print(' Нет')
 end
 
 sleep(5) #Задержка положения на экране на 10 сек.
