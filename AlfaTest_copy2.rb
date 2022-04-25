@@ -15,9 +15,9 @@ def proverit_element_na_str(a1, a2, txt)
 end
 
 #Вызов метода для каждого эл-та
-proverit_element_na_str(:xpath, "/html/body/div/h1", "Заголовок 'Ипотечный калькулятор'")
-proverit_element_na_str(:xpath, "/html/body/div/div[2]/div[1]/form/div[1]/div[2]/a[1]", "Ссылка 'По стоимости недвижимости'")
-proverit_element_na_str(:xpath, "/html/body/div/div[2]/div[1]/form/div[1]/div[2]/a[2]", "Ссылка 'По сумме кредита'")
+proverit_element_na_str(:css, 'body > div > h1', "Заголовок 'Ипотечный калькулятор'")
+proverit_element_na_str(:link, "По стоимости недвижимости", "Ссылка 'По стоимости недвижимости'")
+proverit_element_na_str(:link, "По сумме кредита", "Ссылка 'По сумме кредита'")
 proverit_element_na_str(:xpath, "/html/body/div/div[2]/div[1]/form/div[2]/div[1]", "Текст 'Стоимость недвижимости'")
 proverit_element_na_str(:xpath, "/html/body/div/div[2]/div[1]/form/div[3]/div[1]", "Текст 'Первоначальный взнос'")
 proverit_element_na_str(:xpath, "/html/body/div/div[2]/div[1]/form/div[4]/div[1]", "Текст 'Сумма кредита'")
