@@ -38,7 +38,12 @@ option.select_by(:value,'2') #задание варианта выбора по 
 $driver.find_element(:name, "start_sum").send_keys(20)
 
 #Проверка правильно рассчитанного первоначального взноса и отображения его на экране
-if $driver.find_element(:xpath, "/html/body/div/div[2]/div[1]/form/div[3]/div[2]/div[3]").text() == '(2 400 000 руб.)' and $driver.find_element(:xpath, "/html/body/div/div[2]/div[1]/form/div[3]/div[2]/div[3]").displayed? == true
+so_stranichy = $driver.find_element(:xpath, "/html/body/div/div[2]/div[1]/form/div[3]/div[2]/div[3]").text()
+so_stranichy1 = so_stranichy.gsub(/\s+/, "").gsub(/\руб.+/, "").gsub(/\(+/, "").gsub(/\)+/, "").to_i
+vznos = $driver.find_element(:name, "start_sum").attribute('value').to_i
+stoimost = $driver.find_element(:name, "cost").attribute('value').gsub(/\s+/, "").to_i
+resutat = (vznos * stoimost)/100
+if so_stranichy1 == resutat and $driver.find_element(:xpath, "/html/body/div/div[2]/div[1]/form/div[3]/div[2]/div[3]").displayed? == true
   puts('Первоначальный взнос рассчитан и отображен верно')
 else
   puts('Первоначальный взнос рассчитан или отображен с ошибкой')
@@ -85,9 +90,10 @@ $driver.find_element(:xpath, "/html/body/div/div[2]/div[1]/form/div[10]/div/inpu
 
 wait = Selenium::WebDriver::Wait.new(timeout: 10) #задержка на странице, чтобы прогрузились данные "ежемесячный платёж"
 #Ожидание пока число Ежемесячного платежа не появится на странице
-wait.until { $driver.find_element(css: 'body > div > div.columns-container > div.content-column > form > div.row.no-gutters.split > div:nth-child(1) > div:nth-child(1) > div.calc-fright > div').displayed?}
+wait.until { $driver.find_element(:xpath, '/html/body/div/div[2]/div[1]/form/div[14]/div[1]/div[1]/div[2]/div').displayed?}
+
 #Получение числа из Ежемесячного платежа
-price1 = $driver.find_element(css: 'body > div > div.columns-container > div.content-column > form > div.row.no-gutters.split > div:nth-child(1) > div:nth-child(1) > div.calc-fright > div').attribute("innerHTML")
+price1 = $driver.find_element(:xpath, '/html/body/div/div[2]/div[1]/form/div[14]/div[1]/div[1]/div[2]/div').attribute("innerHTML")
 price2 = price1.gsub(/\s+/, "").gsub(/\,+/, ".")
 puts('Сумма платежа с сайта: ', price2)
 puts('------------------------')
@@ -99,4 +105,4 @@ else
   puts('Нет')
 end
 
-sleep(10) #Задержка положения на экране на 10 сек.
+sleep(5) #Задержка положения на экране на 10 сек.
