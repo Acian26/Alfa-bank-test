@@ -1,5 +1,5 @@
 require 'selenium-webdriver' #Импорт библиотеки selenium для контроля веб-браузера
-driver = Selenium::WebDriver.for :chrome #Открываем браузер хром
+driver = Selenium::WebDriver.for :chrome
 
 Given('I am on the main page') do
   driver.navigate.to 'https://calcus.ru/kalkulyator-ipoteki' #задаём ссылку на страницу, которая должна открываться
